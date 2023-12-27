@@ -21,6 +21,7 @@ async function run() {
         found = await SyncModel.findOneAndUpdate({}, {count: found.count + 1}, {new: true})
         await standardVersion(getConfiguration());
         await SyncModel.findOneAndUpdate({}, {count: found.count - 1})
+        mongoose.disconnect()
       }
     }, 1000);
   } catch (error) {
