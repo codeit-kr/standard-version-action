@@ -18,13 +18,11 @@ async function run() {
       found = await SyncModel.findOne({})
       if (found.count == 0) {
         clearInterval(intervalId)
+        found = await SyncModel.findOneAndUpdate({}, {count: found.count + 1}, {new: true})
+        await standardVersion(getConfiguration());
+        await SyncModel.findOneAndUpdate({}, {count: found.count - 1})
       }
     }, 1000);
-
-    found = await SyncModel.findOneAndUpdate({}, {count: found.count + 1})
-    await standardVersion(getConfiguration());
-    await SyncModel.findOneAndUpdate({}, {count: found.count - 1})
-    
   } catch (error) {
     core.setFailed(error.stack);
   }
