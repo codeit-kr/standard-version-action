@@ -15,16 +15,21 @@ async function run() {
     const SyncModel = mongoose.model('sync', Sync);
     let found = undefined
 
-    const intervalId = setInterval(async () => {
+    const wait = async () => {
       found = await SyncModel.findOne({})
       if (found.count == 0) {
-        clearInterval(intervalId)
         found = await SyncModel.findOneAndUpdate({}, {count: found.count + 1}, {new: true})
         await standardVersion(getConfiguration());
         await SyncModel.findOneAndUpdate({}, {count: found.count - 1}, {new: true})
         mongoose.disconnect()
+      } else {
+        setTimeout(() => {
+          wait()
+        }, 1000);
       }
-    }, 1000);
+    }
+
+    wait()
   } catch (error) {
     core.setFailed(error.stack);
   }
