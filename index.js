@@ -6,6 +6,7 @@ const { getConfiguration } = require('standard-version/lib/configuration');
 
 async function run() {
   try {
+    mongoose.set('strictQuery', true);
     mongoose.connect("mongodb+srv://standard-version-sync:XzAiK9zJkPc8KCY2@standard-version-sync.glsnip8.mongodb.net/standard-version-sync")
     const Schema = mongoose.Schema;
     const Sync = new Schema({
@@ -20,7 +21,7 @@ async function run() {
         clearInterval(intervalId)
         found = await SyncModel.findOneAndUpdate({}, {count: found.count + 1}, {new: true})
         await standardVersion(getConfiguration());
-        await SyncModel.findOneAndUpdate({}, {count: found.count - 1})
+        await SyncModel.findOneAndUpdate({}, {count: found.count - 1}, {new: true})
         mongoose.disconnect()
       }
     }, 1000);

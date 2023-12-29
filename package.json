@@ -14,7 +14,7 @@
   ],
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "mongoose": "^8.0.3",
+    "mongoose": "^6.0.13",
     "standard-version": "^9.5.0"
   },
   "devDependencies": {
